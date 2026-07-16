@@ -8,18 +8,19 @@ app.use(cors());
 app.get("/lens", async (req, res) => {
     const term = req.query.q;
 
-    // صيغة PatentsView الصحيحة (مرمّزة)
-    const query = encodeURIComponent(
-        JSON.stringify({
-            _text_any: {
-                patent_title: term,
-                patent_abstract: term,
-                patent_claims: term
-            }
-        })
-    );
+    // بناء استعلام PatentsView بشكل صحيح
+    const queryObject = {
+        _text_any: {
+            patent_title: term,
+            patent_abstract: term,
+            patent_claims: term
+        }
+    };
 
-    const url = `https://api.patentsview.org/patents/query?q=${query}&f=["patent_id"]`;
+    // ترميز JSON داخل الرابط
+    const encodedQuery = encodeURIComponent(JSON.stringify(queryObject));
+
+    const url = `https://api.patentsview.org/patents/query?q=${encodedQuery}&f=["patent_id"]`;
 
     try {
         const response = await fetch(url);
