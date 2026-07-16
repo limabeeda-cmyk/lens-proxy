@@ -9,7 +9,7 @@ app.get("/lens", async (req, res) => {
     const term = req.query.q;
 
     // الصيغة الصحيحة المقبولة من PatentsView
-    const url = `https://api.patentsview.org/patents/query?q=patent_title:${term}&f=["patent_id"]`;
+    const url = `https://api.patentsview.org/patents/query?q=patent_title:device`;
 
     try {
         const response = await fetch(url);
