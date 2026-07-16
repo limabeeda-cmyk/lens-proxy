@@ -17,7 +17,6 @@ app.get("/lens", async (req, res) => {
 
         const $ = cheerio.load(html);
 
-        // نحاول نلقط عدد النتائج من صفحة Google Patents
         const countText = $('span.results-count').text() || "";
         const count = parseInt(countText.replace(/\D+/g, "")) || 0;
 
