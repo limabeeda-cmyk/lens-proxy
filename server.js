@@ -7,14 +7,19 @@ app.use(cors());
 
 app.get("/lens", async (req, res) => {
     const term = req.query.q;
-    const url = `https://api.lens.org/patent/search?q=${encodeURIComponent(term)}&size=1`;
+
+    // PatentsView API
+    const url = `https://api.patentsview.org/patents/query?q={"_text_any":{"patent_title":["${term}"],"patent_abstract":["${term}"],"patent_claims":["${term}"]}}&f=["patent_id"]`;
 
     try {
         const response = await fetch(url);
         const data = await response.json();
-        res.json(data);
+
+        const count = data.patents ? data.patents.length : 0;
+
+        res.json({ total: count });
     } catch (error) {
-        res.json({ error: "Lens API error" });
+        res.json({ error: "PatentsView API error" });
     }
 });
 
