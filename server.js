@@ -1,6 +1,7 @@
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
+import cheerio from "cheerio";
 
 const app = express();
 app.use(cors());
@@ -8,18 +9,21 @@ app.use(cors());
 app.get("/lens", async (req, res) => {
     const term = req.query.q;
 
-    // الصيغة الصحيحة المقبولة من PatentsView
-    const url = `https://api.patentsview.org/patents/query?q=patent_title:device`;
+    const url = `https://patents.google.com/?q=${encodeURIComponent(term)}`;
 
     try {
         const response = await fetch(url);
-        const data = await response.json();
+        const html = await response.text();
 
-        const count = data.patents ? data.patents.length : 0;
+        const $ = cheerio.load(html);
+
+        // نحاول نلقط عدد النتائج من صفحة Google Patents
+        const countText = $('span.results-count').text() || "";
+        const count = parseInt(countText.replace(/\D+/g, "")) || 0;
 
         res.json({ total: count });
     } catch (error) {
-        res.json({ error: "PatentsView API error" });
+        res.json({ error: "Google Patents error" });
     }
 });
 
