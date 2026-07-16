@@ -8,7 +8,6 @@ app.use(cors());
 app.get("/lens", async (req, res) => {
     const term = req.query.q;
 
-    // PatentsView API (بديل Lens)
     const url = `https://api.patentsview.org/patents/query?q={"_text_any":{"patent_title":["${term}"],"patent_abstract":["${term}"],"patent_claims":["${term}"]}}&f=["patent_id"]`;
 
     try {
